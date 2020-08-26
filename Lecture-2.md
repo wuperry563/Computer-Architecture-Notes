@@ -228,3 +228,151 @@ Spec A =( 1 *2* 4 *8 )^1/4 = 2.83
 Spec B = (3*3*3*3)^1/4 = 3
 
 Spec A is better.
+
+### Pitfalls of Benchmarks
+
+* Workloads are I/O bound (communication or TCP/IP) not useful
+* Benchmarks are too old
+    * Meaning they use different/old calculations, not representaitve of true workload
+* Needs to be refreshed
+* Wrong benchmark for application
+    * For example, Realtime operating system -> GCC
+    * Or, Benchmarks are synthetic. **How well does the artificial workload resemble real workloads?**
+
+### How do we improve performance?
+
+* Use parallellism 
+    * Multi processor or memory
+    * Data level Parallelism -> Data across multiple read/writes on memory addresses
+    * Instructional Parallelism
+        * Pipeline, ALU, Cache.
+* Abuse Locality
+    * Temporal: Recently accessed? Cache it.
+    * Spacial: Closely related in address? Cache it. 
+    
+### Speedup and Parallel Efficiency
+
+* Speedup = S(N) = Tserial/Tparallel
+* N: Number of processors
+* Tserial: Execution time with sequential
+* Tparallel: Execution for parallel algorithm on N processors
+* S(N) = speedup
+* Parallel Efficiency = E(N) = S(N)/N = Tserial/Tparallell*N 
+
+### Amdahl's Law
+
+* Gives speedup by parallelizing
+* 2 factors: 
+    * Fraction of computation time in original computer
+    * Improvement gained by enhanced execution mode in entire program
+    
+### Amdahl's law with Multicore
+
+* S(N) = 1/((1-P)+P/n)
+* N = # CPUs
+* P: P fraction of algo that can be parallelized.
+
+
+**Sequential execution parts limit speedup**  
+**Reality is worse due to IO, Load balancing, Communication Overhead**
+
+### Gustafson's Law
+
+* Sequential is constant, but problem space can increase with more cores
+* We can solve larger problems with more cores.
+* S(n)= s +N(1-s)
+* Problem size is not fixed. 
+* N = # cores, s = serial execution percentage.
+
+### Differences?
+
+* Amdahl: Both sequential and parallel spaces are constant (**Same Data**)
+* Gustafsons: Computing power will cause more data to be analyzed. (**Increased Problem Space**)
+
+### Metric 3: Power
+
+* power is due to current flow from supply to ground
+* Add up all currents flowing form Vdd to ground, P=IV
+* 2 groups
+    * Dynamic: **Cap charge**(Actual usage)/discharge, short circuit.
+    * Static: leakage currents
+    * **As transistors size goes down, leakage currents becomes high!**
+
+### Power and Energy
+
+* Power is drawn from Vdd
+* Power is energy per unit oftime.
+* Instant P = IV
+* Energy = E = Integral(0,T) Pt(dt)
+* Average
+
+### Dynamic Power
+
+* Needs to determine Id, multiply with Vdd
+Id = C(dv/dt) = C*V*F (capacitance, voltage, frequency)
+P = C(V^2)F
+
+* If we need to reduce power
+    * Keep C (capacitance) low. Small transistors. 
+    * Reduce Vdd, Transistors switch slower if vdd is low. 
+    * Reduce Switching Frequency 
+* Clock switches every clock cycle, but gates do not.
+* A gate needs two toggles. 
+Pswitch = Alpha(0->1) Cl*V^2(F)    alpha = activity factor
+* If signal is clock, Alpha=1
+* If signal switches once/cycle, Alpha = 1/2
+
+### Static Power
+
+* Standby Mode power
+* Transistors are getting smaller, need to maintain tiny current.
+
+### Total Power
+
+* Sum of Dynamic And Static
+* Dynamic
+    * Alpha: Clock gating, sleep mode
+    * C: Small transistors, short wires
+    * Vdd, Low possible supply voltage
+    * f: Lowest frequency
+* Static
+    * Low Temperature
+    * Smaller Vds insert pullup and pulldown registers to reduce
+    * Reduce source and drain area.
+
+* Controlling Power
+    * Two major Knobs:
+        * Dynamic Voltage/Freq scaling
+        * Power Gating: Gate Power during idle, put in sleep mode. 
+
+### Voltage Islands
+
+* Voltage Islands. Power savings vs area overhead (voltage regulators)
+    * Bigger area, more expensive, but power savings 17.4%
+    
+* Clock Gating: 
+    * Power consumption is significant.
+    * Clock is switched every cycle, Alpha=1
+
+* Dynamic Voltage Freq Scaling 
+    * Different Supply Voltages.
+    * Match voltage to frequency. 
+    
+* Examples: 
+    * P-states for active control of voltage/frequency
+    * C-states for degrees of idle control.
+ 
+### Metric: Dependability
+
+* How do we measure reliability?
+* Service Accomplishment, where service is delivered in SLA
+* Service Interruption, Where service isn't delivered
+    * Failure = Transition from 1->2
+    * Restoration = From 2 -> 1
+
+* MTTF= reliablity, mean time to failure.
+* Failures in time (FIT): Rate of failures, 1/MTTF
+    * usually billions of hours of operation
+* MTTR: How long to repair when it breaks
+    * MTBF = MTTF+ MTTR
+* Availbility = MTTF/(MTTF+MTTR)
